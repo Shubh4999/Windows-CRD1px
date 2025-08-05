@@ -2,16 +2,17 @@ name: Windows-CRD1px
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-          inputs:
+    inputs:
       authcode:
         description: 'Enter CRD code'
         required: true
       pincode:
         description: 'Six digit Pin'
         required: true
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: windows-latest
@@ -20,7 +21,12 @@ jobs:
       - name: Run setup script
         shell: pwsh
         run: .github/workflows/setup.ps1
-    - name: Starting CRD
-      run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
-    - name: Keep Alive
-      run: ./timeout.ps1
+      - name: Starting CRD
+        shell: pwsh
+        run: |
+          $authcode = "${{ github.event.inputs.authcode }}"
+          $pincode = "${{ github.event.inputs.pincode }}"
+          & $authcode -pin=$pincode
+      - name: Keep Alive
+        shell: pwsh
+        run: ./timeout.ps1
