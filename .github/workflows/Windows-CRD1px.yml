@@ -13,11 +13,11 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Initializing Setup
-      run: ./setup.ps1
+      - uses: actions/checkout@v3
+      - name: Run setup script
+        shell: pwsh
+        run: .github/workflows/setup.ps1
     - name: Starting CRD
       run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
     - name: Keep Alive
